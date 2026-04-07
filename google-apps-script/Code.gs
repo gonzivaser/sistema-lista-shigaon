@@ -87,8 +87,11 @@ function cargarAsistencia(fecha, tipoActividad, idPresentes, idTardes) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const ws = ss.getSheetByName(SHEET_ASISTENCIA);
 
+  const parts = fecha.split('-');
+  const fechaFormateada = parseInt(parts[1]) + '/' + parseInt(parts[2]) + '/' + parts[0].slice(-2);
+
   const nuevaFila = [
-    new Date(fecha),
+    fechaFormateada,
     tipoActividad,
     idPresentes || '',
     idTardes || '',
