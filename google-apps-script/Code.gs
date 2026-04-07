@@ -1,19 +1,6 @@
-// ============================================================
-// Google Apps Script - Backend para Sistema Lista Shigaon
-// ============================================================
-// 
-// INSTRUCCIONES DE SETUP:
-// 1. Abrir Google Sheets con el CRM
-// 2. Extensiones > Apps Script
-// 3. Pegar este código en Code.gs
-// 4. Deploy > New deployment > Web app
-//    - Ejecutar como: Tu cuenta
-//    - Acceso: Cualquiera
-// 5. Copiar la URL del deployment
-// ============================================================
-
 const SHEET_LISTADO = 'Listado';
 const SHEET_ASISTENCIA = 'AsistenciaJetAdmin';
+const SHEET_CONCATENADA = 'AsistenciaJetAdminConcatenada';
 
 function doGet(e) {
   try {
@@ -21,6 +8,12 @@ function doGet(e) {
 
     if (action === 'getJanijim') {
       return jsonResponse(getJanijim());
+    }
+
+    if (action === 'getAsistenciaCargada') {
+      const fecha = e.parameter.fecha;
+      const tipo = e.parameter.tipo;
+      return jsonResponse(getAsistenciaCargada(fecha, tipo));
     }
 
     return jsonResponse({ error: 'Acción no válida' }, 400);
@@ -100,6 +93,60 @@ function cargarAsistencia(fecha, tipoActividad, idPresentes, idTardes) {
   ws.appendRow(nuevaFila);
 
   return { success: true, message: 'Asistencia cargada correctamente' };
+}
+
+function parseFechaCelda(cell) {
+  if (!cell) return null;
+  var d = null;
+  if (typeof cell.getMonth === 'function') {
+    d = cell;
+  } else {
+    d = new Date(String(cell));
+  }
+  if (d && !isNaN(d.getTime())) {
+    return { y: d.getFullYear(), m: d.getMonth() + 1, d: d.getDate() };
+  }
+  var str = String(cell).trim();
+  var parts = str.split('/');
+  if (parts.length === 3) {
+    var mm = parseInt(parts[0]);
+    var dd = parseInt(parts[1]);
+    var yy = parseInt(parts[2]);
+    if (yy < 100) yy += 2000;
+    return { y: yy, m: mm, d: dd };
+  }
+  return null;
+}
+
+function getAsistenciaCargada(fecha, tipoActividad) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ws = ss.getSheetByName(SHEET_ASISTENCIA);
+  const data = ws.getDataRange().getValues();
+
+  const parts = fecha.split('-');
+  const targetY = parseInt(parts[0]);
+  const targetM = parseInt(parts[1]);
+  const targetD = parseInt(parts[2]);
+
+  var seen = {};
+
+  for (var i = 1; i < data.length; i++) {
+    var row = data[i];
+    var fechaParsed = parseFechaCelda(row[0]);
+    if (!fechaParsed) continue;
+
+    if (fechaParsed.y === targetY && fechaParsed.m === targetM && fechaParsed.d === targetD && String(row[1]).trim() === tipoActividad) {
+      var presentes = String(row[2] || '').split(',').map(function(s) { return s.trim(); }).filter(function(s) { return s !== ''; });
+      var tardes = String(row[3] || '').split(',').map(function(s) { return s.trim(); }).filter(function(s) { return s !== ''; });
+      var todos = presentes.concat(tardes);
+      for (var j = 0; j < todos.length; j++) {
+        var id = parseInt(todos[j]);
+        if (!isNaN(id)) seen[id] = true;
+      }
+    }
+  }
+
+  return { idsCargados: Object.keys(seen).map(Number) };
 }
 
 function jsonResponse(data, code) {

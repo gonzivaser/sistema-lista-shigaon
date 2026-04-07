@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import MultiSelect from './MultiSelect';
+import { fetchAsistenciaCargada } from '../services/api';
 
 const ACTIVITY_TYPES = [
   { value: 'T', label: 'Tarde' },
@@ -14,6 +15,22 @@ export default function AttendanceForm({ janijim, onSubmit, loading }) {
   const [tardes, setTardes] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState(null);
+  const [idsCargados, setIdsCargados] = useState([]);
+  const [loadingCargados, setLoadingCargados] = useState(false);
+
+  useEffect(() => {
+    if (fecha && tipoActividad) {
+      setLoadingCargados(true);
+      fetchAsistenciaCargada(fecha, tipoActividad)
+        .then(ids => setIdsCargados(ids))
+        .catch(() => setIdsCargados([]))
+        .finally(() => setLoadingCargados(false));
+    } else {
+      setIdsCargados([]);
+    }
+  }, [fecha, tipoActividad]);
+
+  const disabledIds = new Set(idsCargados);
 
   const options = janijim
     .map(j => ({ id: j.id, label: j.nombre }))
@@ -61,7 +78,7 @@ export default function AttendanceForm({ janijim, onSubmit, loading }) {
           type="date"
           value={fecha}
           onChange={e => setFecha(e.target.value)}
-          className="px-4 py-2.5 rounded-lg bg-amber-500 text-white font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-300 [&::-webkit-calendar-picker-indicator]:invert"
+          className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-amber-500 text-white font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-300 [&::-webkit-calendar-picker-indicator]:invert"
         />
       </div>
 
@@ -72,7 +89,7 @@ export default function AttendanceForm({ janijim, onSubmit, loading }) {
         <select
           value={tipoActividad}
           onChange={e => setTipoActividad(e.target.value)}
-          className="px-4 py-2.5 rounded-lg bg-amber-500 text-white font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-300 appearance-none min-w-[160px]"
+          className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-amber-500 text-white font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-300 appearance-none min-w-[160px]"
         >
           <option value="">Elegir...</option>
           {ACTIVITY_TYPES.map(t => (
@@ -87,6 +104,8 @@ export default function AttendanceForm({ janijim, onSubmit, loading }) {
         selected={presentes}
         onChange={setPresentes}
         placeholder="Elegir presentes..."
+        disabledIds={disabledIds}
+        loadingDisabled={loadingCargados}
       />
 
       <MultiSelect
@@ -95,6 +114,8 @@ export default function AttendanceForm({ janijim, onSubmit, loading }) {
         selected={tardes}
         onChange={setTardes}
         placeholder="Elegir tardes..."
+        disabledIds={disabledIds}
+        loadingDisabled={loadingCargados}
       />
 
       {message && (
@@ -110,7 +131,7 @@ export default function AttendanceForm({ janijim, onSubmit, loading }) {
       <button
         type="submit"
         disabled={submitting || loading}
-        className="flex items-center gap-2 px-6 py-2.5 bg-white/90 hover:bg-white text-purple-900 font-bold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+        className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 sm:py-2.5 bg-white/90 hover:bg-white text-purple-900 font-bold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 
-export default function MultiSelect({ label, options, selected, onChange, placeholder = 'Elegir...' }) {
+export default function MultiSelect({ label, options, selected, onChange, placeholder = 'Elegir...', disabledIds = new Set(), loadingDisabled = false }) {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const containerRef = useRef(null);
@@ -28,7 +28,7 @@ export default function MultiSelect({ label, options, selected, onChange, placeh
   }
 
   function selectAll() {
-    const allIds = filtered.map(o => o.id);
+    const allIds = filtered.filter(o => !disabledIds.has(o.id)).map(o => o.id);
     const merged = [...new Set([...selected, ...allIds])];
     onChange(merged);
   }
@@ -79,26 +79,37 @@ export default function MultiSelect({ label, options, selected, onChange, placeh
               Deseleccionar todos
             </button>
           </div>
-          <div className="max-h-60 overflow-y-auto">
+          <div className="max-h-72 sm:max-h-60 overflow-y-auto">
             {filtered.length === 0 ? (
               <div className="px-4 py-3 text-purple-300/60 text-sm">Sin resultados</div>
             ) : (
-              filtered.map(opt => (
-                <label
-                  key={opt.id}
-                  className={`flex items-center gap-3 px-4 py-2 cursor-pointer transition-colors ${
-                    selected.includes(opt.id) ? 'bg-purple-700/60' : 'hover:bg-purple-800/40'
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={selected.includes(opt.id)}
-                    onChange={() => toggle(opt.id)}
-                    className="w-4 h-4 rounded accent-amber-500 cursor-pointer"
-                  />
-                  <span className="text-sm text-white/90">{opt.label}</span>
-                </label>
-              ))
+              filtered.map(opt => {
+                const isDisabled = disabledIds.has(opt.id);
+                return (
+                  <label
+                    key={opt.id}
+                    className={`flex items-center gap-3 px-4 py-3 sm:py-2 transition-colors ${
+                      isDisabled
+                        ? 'opacity-40 cursor-not-allowed'
+                        : selected.includes(opt.id)
+                          ? 'bg-purple-700/60 cursor-pointer'
+                          : 'hover:bg-purple-800/40 cursor-pointer'
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selected.includes(opt.id)}
+                      disabled={isDisabled}
+                      onChange={() => !isDisabled && toggle(opt.id)}
+                      className="w-5 h-5 sm:w-4 sm:h-4 rounded accent-amber-500 flex-shrink-0 disabled:cursor-not-allowed cursor-pointer"
+                    />
+                    <span className="text-sm text-white/90">
+                      {opt.label}
+                      {isDisabled && <span className="ml-2 text-xs text-purple-300/60">ya cargado</span>}
+                    </span>
+                  </label>
+                );
+              })
             )}
           </div>
         </div>

@@ -52,3 +52,20 @@ export async function cargarAsistencia({ fecha, tipoActividad, idPresentes, idTa
 
   return res.json();
 }
+
+export async function fetchAsistenciaCargada(fecha, tipoActividad) {
+  if (isDemo()) {
+    await new Promise(r => setTimeout(r, 300));
+    return [];
+  }
+
+  const url = `${SCRIPT_URL}?action=getAsistenciaCargada&fecha=${fecha}&tipo=${tipoActividad}`;
+  const res = await fetch(url);
+
+  if (!res.ok) {
+    throw new Error(`Error al consultar asistencia: ${res.status}`);
+  }
+
+  const data = await res.json();
+  return data.idsCargados || [];
+}
