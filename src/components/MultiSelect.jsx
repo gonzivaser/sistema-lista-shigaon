@@ -60,16 +60,6 @@ export default function MultiSelect({ label, options, selected, onChange, placeh
 
       {isOpen && (
         <div className="mt-1 bg-purple-900/95 border border-purple-500/30 rounded-lg shadow-2xl overflow-hidden z-50 relative">
-          <div className="p-2 border-b border-purple-500/20">
-            <input
-              type="text"
-              placeholder="Buscar..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="w-full px-3 py-2 bg-purple-800/50 border border-purple-500/30 rounded-md text-white placeholder-purple-300/50 focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-sm"
-              autoFocus
-            />
-          </div>
           <div className="px-2 py-1.5 flex gap-2 border-b border-purple-500/20">
             <button type="button" onClick={selectAll} className="text-xs text-amber-400 hover:text-amber-300 cursor-pointer font-medium">
               Seleccionar todos

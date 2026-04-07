@@ -78,7 +78,7 @@ export default function AttendanceForm({ janijim, onSubmit, loading }) {
           type="date"
           value={fecha}
           onChange={e => setFecha(e.target.value)}
-          className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-amber-500 text-white font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-300 [&::-webkit-calendar-picker-indicator]:invert"
+          className="w-full px-4 py-2.5 rounded-lg bg-amber-500 text-white font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-300 [&::-webkit-calendar-picker-indicator]:invert"
         />
       </div>
 
