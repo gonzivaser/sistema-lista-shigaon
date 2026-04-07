@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+:root {
+  --purple-dark: #1a0a2e;
+  --purple-main: #6b0f6b;
+  --purple-mid: #8b1a8b;
+  --orange-main: #f59e0b;
+  --orange-hover: #d97706;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background-color: var(--purple-dark);
+  color: white;
+  min-height: 100vh;
+}
