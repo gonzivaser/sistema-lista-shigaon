@@ -139,7 +139,7 @@ export default function App() {
                   <select
                     value={selectedColor}
                     onChange={e => setSelectedColor(e.target.value)}
-                    className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-amber-500 text-white font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-300 appearance-none min-w-[160px]"
+                    className="w-full px-4 py-2.5 rounded-lg bg-amber-500 text-white font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-300 appearance-none"
                   >
                     <option value="">Elegir...</option>
                     {colores.map(c => (
@@ -157,7 +157,7 @@ export default function App() {
                   <select
                     value={selectedMejan}
                     onChange={e => setSelectedMejan(e.target.value)}
-                    className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-amber-500 text-white font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-300 appearance-none min-w-[160px]"
+                    className="w-full px-4 py-2.5 rounded-lg bg-amber-500 text-white font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-300 appearance-none"
                   >
                     <option value="">Elegir...</option>
                     {mejanes.map(m => (

@@ -78,7 +78,7 @@ export default function AttendanceForm({ janijim, onSubmit, loading }) {
           type="date"
           value={fecha}
           onChange={e => setFecha(e.target.value)}
-          className="w-full px-4 py-2.5 rounded-lg bg-amber-500 text-white font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-300 [&::-webkit-calendar-picker-indicator]:invert"
+          className="w-full box-border px-4 py-2.5 rounded-lg bg-amber-500 text-white font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-300 [&::-webkit-calendar-picker-indicator]:invert"
         />
       </div>
 
@@ -89,7 +89,7 @@ export default function AttendanceForm({ janijim, onSubmit, loading }) {
         <select
           value={tipoActividad}
           onChange={e => setTipoActividad(e.target.value)}
-          className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-amber-500 text-white font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-300 appearance-none min-w-[160px]"
+          className="w-full px-4 py-2.5 rounded-lg bg-amber-500 text-white font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-300 appearance-none"
         >
           <option value="">Elegir...</option>
           {ACTIVITY_TYPES.map(t => (
