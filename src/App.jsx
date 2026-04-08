@@ -94,7 +94,7 @@ export default function App() {
 
       {/* Main content */}
       <main className="max-w-4xl mx-auto px-2 sm:px-4 py-4 sm:py-6">
-        <div className="bg-[#6b0f6b] rounded-xl p-4 sm:p-6 shadow-2xl border border-purple-400/10">
+        <div className="bg-[#6b0f6b] rounded-xl p-4 sm:p-6 shadow-2xl border border-purple-400/10 overflow-hidden">
           {/* Tab title */}
           <h1 className="text-2xl font-light mb-4 text-white/90">
             {tab === 'general' && 'Por Camada'}

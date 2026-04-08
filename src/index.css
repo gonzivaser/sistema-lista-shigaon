@@ -19,4 +19,15 @@ body {
 
 select, input[type="date"] {
   font-size: 16px;
+  max-width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+input[type="date"]::-webkit-date-and-time-value {
+  text-align: left;
 }
