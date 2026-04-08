@@ -74,12 +74,19 @@ export default function AttendanceForm({ janijim, onSubmit, loading }) {
         <label className="block text-sm font-bold uppercase tracking-wider mb-1.5 text-white/90">
           Fecha
         </label>
-        <input
-          type="date"
-          value={fecha}
-          onChange={e => setFecha(e.target.value)}
-          className="w-full box-border px-4 py-2.5 rounded-lg bg-amber-500 text-white font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-300 [&::-webkit-calendar-picker-indicator]:invert"
-        />
+        <div className="relative">
+          {!fecha && (
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white font-semibold pointer-events-none">
+              Elegir fecha...
+            </span>
+          )}
+          <input
+            type="date"
+            value={fecha}
+            onChange={e => setFecha(e.target.value)}
+            className={`w-full box-border px-4 py-2.5 rounded-lg bg-amber-500 text-white font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-300 [&::-webkit-calendar-picker-indicator]:invert ${!fecha ? '[color-scheme:dark] [&::-webkit-datetime-edit]:opacity-0' : ''}`}
+          />
+        </div>
       </div>
 
       <div>
