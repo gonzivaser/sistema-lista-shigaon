@@ -48,8 +48,8 @@ export default function AttendanceForm({ janijim, onSubmit, loading }) {
       setMessage({ type: 'error', text: 'Seleccioná un tipo de actividad' });
       return;
     }
-    if (presentes.length === 0) {
-      setMessage({ type: 'error', text: 'Seleccioná al menos un janij presente' });
+    if (presentes.length === 0 && tardes.length === 0) {
+      setMessage({ type: 'error', text: 'Seleccioná al menos un janij presente o tarde' });
       return;
     }
 
