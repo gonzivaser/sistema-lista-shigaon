@@ -61,6 +61,9 @@ export default function AttendanceForm({ janijim, onSubmit, loading }) {
       setMessage({ type: 'success', text: `Asistencia cargada: ${presentes.length} presentes, ${tardes.length} tardes` });
       setPresentes([]);
       setTardes([]);
+      fetchAsistenciaCargada(fecha, tipoActividad)
+        .then(data => setIdsCargados(data))
+        .catch(() => {});
     } catch (err) {
       setMessage({ type: 'error', text: err.message });
     } finally {
