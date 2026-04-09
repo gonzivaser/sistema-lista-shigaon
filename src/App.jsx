@@ -6,6 +6,7 @@ const TABS = [
   { id: 'general', label: 'General' },
   { id: 'color', label: 'Por Color' },
   { id: 'mejan', label: 'Por Mejan' },
+  { id: 'dupla', label: 'Por Dupla' },
 ];
 
 export default function App() {
@@ -16,6 +17,8 @@ export default function App() {
 
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedMejan, setSelectedMejan] = useState('');
+  const [selectedMejan1, setSelectedMejan1] = useState('');
+  const [selectedMejan2, setSelectedMejan2] = useState('');
 
   useEffect(() => {
     loadJanijim();
@@ -51,8 +54,11 @@ export default function App() {
     if (tab === 'mejan' && selectedMejan) {
       return janijim.filter(j => j.mejan === selectedMejan);
     }
+    if (tab === 'dupla' && selectedMejan1 && selectedMejan2) {
+      return janijim.filter(j => j.mejan === selectedMejan1 || j.mejan === selectedMejan2);
+    }
     return janijim;
-  }, [janijim, tab, selectedColor, selectedMejan]);
+  }, [janijim, tab, selectedColor, selectedMejan, selectedMejan1, selectedMejan2]);
 
   async function handleSubmit(data) {
     return cargarAsistencia(data);
@@ -71,6 +77,8 @@ export default function App() {
                   setTab(t.id);
                   setSelectedColor('');
                   setSelectedMejan('');
+                  setSelectedMejan1('');
+                  setSelectedMejan2('');
                 }}
                 className={`flex-1 sm:flex-none px-3 sm:px-5 py-3 text-sm font-semibold transition-colors cursor-pointer text-center ${
                   tab === t.id
@@ -100,6 +108,7 @@ export default function App() {
             {tab === 'general' && 'Por Camada'}
             {tab === 'color' && 'Por Color'}
             {tab === 'mejan' && 'Por Mejan'}
+            {tab === 'dupla' && 'Por Dupla'}
           </h1>
           <hr className="border-purple-400/20 mb-6" />
 
@@ -167,8 +176,43 @@ export default function App() {
                 </div>
               )}
 
+              {tab === 'dupla' && (
+                <div className="mb-6 space-y-4">
+                  <div>
+                    <label className="block text-sm font-bold uppercase tracking-wider mb-1.5 text-white/90">
+                      Mejan 1
+                    </label>
+                    <select
+                      value={selectedMejan1}
+                      onChange={e => setSelectedMejan1(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-lg bg-amber-500 text-white font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-300 appearance-none"
+                    >
+                      <option value="">Elegir...</option>
+                      {mejanes.filter(m => m !== selectedMejan2).map(m => (
+                        <option key={m} value={m}>{m}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold uppercase tracking-wider mb-1.5 text-white/90">
+                      Mejan 2
+                    </label>
+                    <select
+                      value={selectedMejan2}
+                      onChange={e => setSelectedMejan2(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-lg bg-amber-500 text-white font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-300 appearance-none"
+                    >
+                      <option value="">Elegir...</option>
+                      {mejanes.filter(m => m !== selectedMejan1).map(m => (
+                        <option key={m} value={m}>{m}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              )}
+
               {/* Show form only when filter is selected (or general tab) */}
-              {(tab === 'general' || (tab === 'color' && selectedColor) || (tab === 'mejan' && selectedMejan)) && (
+              {(tab === 'general' || (tab === 'color' && selectedColor) || (tab === 'mejan' && selectedMejan) || (tab === 'dupla' && selectedMejan1 && selectedMejan2)) && (
                 <>
                   <AttendanceForm
                     janijim={filteredJanijim}
