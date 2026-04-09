@@ -83,14 +83,11 @@ function cargarAsistencia(fecha, tipoActividad, idPresentes, idTardes) {
   const parts = fecha.split('-');
   const fechaFormateada = parseInt(parts[1]) + '/' + parseInt(parts[2]) + '/' + parts[0].slice(-2);
 
-  const nuevaFila = [
-    fechaFormateada,
-    tipoActividad,
-    idPresentes || '',
-    idTardes || '',
-  ];
-
-  ws.appendRow(nuevaFila);
+  var lastRow = ws.getLastRow() + 1;
+  ws.getRange(lastRow, 1).setValue(fechaFormateada);
+  ws.getRange(lastRow, 2).setValue(tipoActividad);
+  ws.getRange(lastRow, 3).setNumberFormat('@').setValue(idPresentes || '');
+  ws.getRange(lastRow, 4).setNumberFormat('@').setValue(idTardes || '');
 
   return { success: true, message: 'Asistencia cargada correctamente' };
 }
