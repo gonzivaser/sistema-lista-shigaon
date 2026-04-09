@@ -56,7 +56,7 @@ export async function cargarAsistencia({ fecha, tipoActividad, idPresentes, idTa
 export async function fetchAsistenciaCargada(fecha, tipoActividad) {
   if (isDemo()) {
     await new Promise(r => setTimeout(r, 300));
-    return [];
+    return {};
   }
 
   const url = `${SCRIPT_URL}?action=getAsistenciaCargada&fecha=${fecha}&tipo=${tipoActividad}`;
@@ -67,5 +67,5 @@ export async function fetchAsistenciaCargada(fecha, tipoActividad) {
   }
 
   const data = await res.json();
-  return data.idsCargados || [];
+  return data.idsCargados || {};
 }

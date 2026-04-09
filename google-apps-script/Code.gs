@@ -138,15 +138,18 @@ function getAsistenciaCargada(fecha, tipoActividad) {
     if (fechaParsed.y === targetY && fechaParsed.m === targetM && fechaParsed.d === targetD && String(row[1]).trim() === tipoActividad) {
       var presentes = String(row[2] || '').split(',').map(function(s) { return s.trim(); }).filter(function(s) { return s !== ''; });
       var tardes = String(row[3] || '').split(',').map(function(s) { return s.trim(); }).filter(function(s) { return s !== ''; });
-      var todos = presentes.concat(tardes);
-      for (var j = 0; j < todos.length; j++) {
-        var id = parseInt(todos[j]);
-        if (!isNaN(id)) seen[id] = true;
+      for (var j = 0; j < presentes.length; j++) {
+        var idP = parseInt(presentes[j]);
+        if (!isNaN(idP)) seen[idP] = 'P';
+      }
+      for (var k = 0; k < tardes.length; k++) {
+        var idT = parseInt(tardes[k]);
+        if (!isNaN(idT)) seen[idT] = 'T';
       }
     }
   }
 
-  return { idsCargados: Object.keys(seen).map(Number) };
+  return { idsCargados: seen };
 }
 
 function jsonResponse(data, code) {

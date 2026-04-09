@@ -15,22 +15,22 @@ export default function AttendanceForm({ janijim, onSubmit, loading }) {
   const [tardes, setTardes] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState(null);
-  const [idsCargados, setIdsCargados] = useState([]);
+  const [idsCargados, setIdsCargados] = useState({});
   const [loadingCargados, setLoadingCargados] = useState(false);
 
   useEffect(() => {
     if (fecha && tipoActividad) {
       setLoadingCargados(true);
       fetchAsistenciaCargada(fecha, tipoActividad)
-        .then(ids => setIdsCargados(ids))
-        .catch(() => setIdsCargados([]))
+        .then(data => setIdsCargados(data))
+        .catch(() => setIdsCargados({}))
         .finally(() => setLoadingCargados(false));
     } else {
-      setIdsCargados([]);
+      setIdsCargados({});
     }
   }, [fecha, tipoActividad]);
 
-  const disabledIds = new Set(idsCargados);
+  const disabledMap = idsCargados;
 
   const options = janijim
     .map(j => ({ id: j.id, label: j.nombre }))
@@ -111,7 +111,7 @@ export default function AttendanceForm({ janijim, onSubmit, loading }) {
         selected={presentes}
         onChange={setPresentes}
         placeholder="Elegir presentes..."
-        disabledIds={disabledIds}
+        disabledMap={disabledMap}
         loadingDisabled={loadingCargados}
       />
 
@@ -121,7 +121,7 @@ export default function AttendanceForm({ janijim, onSubmit, loading }) {
         selected={tardes}
         onChange={setTardes}
         placeholder="Elegir tardes..."
-        disabledIds={disabledIds}
+        disabledMap={disabledMap}
         loadingDisabled={loadingCargados}
       />
 

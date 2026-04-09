@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 
-export default function MultiSelect({ label, options, selected, onChange, placeholder = 'Elegir...', disabledIds = new Set(), loadingDisabled = false }) {
+export default function MultiSelect({ label, options, selected, onChange, placeholder = 'Elegir...', disabledMap = {}, loadingDisabled = false }) {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const containerRef = useRef(null);
@@ -28,7 +28,7 @@ export default function MultiSelect({ label, options, selected, onChange, placeh
   }
 
   function selectAll() {
-    const allIds = filtered.filter(o => !disabledIds.has(o.id)).map(o => o.id);
+    const allIds = filtered.filter(o => !disabledMap[o.id]).map(o => o.id);
     const merged = [...new Set([...selected, ...allIds])];
     onChange(merged);
   }
@@ -74,7 +74,8 @@ export default function MultiSelect({ label, options, selected, onChange, placeh
               <div className="px-4 py-3 text-purple-300/60 text-sm">Sin resultados</div>
             ) : (
               filtered.map(opt => {
-                const isDisabled = disabledIds.has(opt.id);
+                const tipoAsistencia = disabledMap[opt.id];
+                const isDisabled = !!tipoAsistencia;
                 return (
                   <label
                     key={opt.id}
@@ -93,10 +94,15 @@ export default function MultiSelect({ label, options, selected, onChange, placeh
                       onChange={() => !isDisabled && toggle(opt.id)}
                       className="w-5 h-5 sm:w-4 sm:h-4 rounded accent-amber-500 flex-shrink-0 disabled:cursor-not-allowed cursor-pointer"
                     />
-                    <span className="text-sm text-white/90">
+                    <span className="text-sm text-white/90 flex-1">
                       {opt.label}
                       {isDisabled && <span className="ml-2 text-xs text-purple-300/60">ya cargado</span>}
                     </span>
+                    {isDisabled && (
+                      <span className={`text-xs font-bold flex-shrink-0 ${tipoAsistencia === 'P' ? 'text-green-400' : 'text-amber-400'}`}>
+                        {tipoAsistencia}
+                      </span>
+                    )}
                   </label>
                 );
               })
