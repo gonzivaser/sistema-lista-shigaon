@@ -77,17 +77,25 @@ function getJanijim() {
 }
 
 function cargarAsistencia(fecha, tipoActividad, idPresentes, idTardes) {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const ws = ss.getSheetByName(SHEET_ASISTENCIA);
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
 
-  const parts = fecha.split('-');
-  const fechaFormateada = parseInt(parts[1]) + '/' + parseInt(parts[2]) + '/' + parts[0].slice(-2);
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const ws = ss.getSheetByName(SHEET_ASISTENCIA);
 
-  var lastRow = ws.getLastRow() + 1;
-  ws.getRange(lastRow, 1).setValue(fechaFormateada);
-  ws.getRange(lastRow, 2).setValue(tipoActividad);
-  ws.getRange(lastRow, 3).setNumberFormat('@').setValue(idPresentes || '');
-  ws.getRange(lastRow, 4).setNumberFormat('@').setValue(idTardes || '');
+    const parts = fecha.split('-');
+    const fechaFormateada = parseInt(parts[1]) + '/' + parseInt(parts[2]) + '/' + parts[0].slice(-2);
+
+    var lastRow = ws.getLastRow() + 1;
+    ws.getRange(lastRow, 1).setValue(fechaFormateada);
+    ws.getRange(lastRow, 2).setValue(tipoActividad);
+    ws.getRange(lastRow, 3).setNumberFormat('@').setValue(idPresentes || '');
+    ws.getRange(lastRow, 4).setNumberFormat('@').setValue(idTardes || '');
+    SpreadsheetApp.flush();
+  } finally {
+    lock.releaseLock();
+  }
 
   return { success: true, message: 'Asistencia cargada correctamente' };
 }
