@@ -27,6 +27,11 @@ export default function MultiSelect({ label, options, selected, onChange, placeh
     onChange(selected.filter(s => !filteredIds.has(s)));
   }
 
+  function closeModal() {
+    setIsOpen(false);
+    setSearch('');
+  }
+
   const selectedCount = selected.length;
 
   return (
@@ -48,15 +53,24 @@ export default function MultiSelect({ label, options, selected, onChange, placeh
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onClick={() => setIsOpen(false)}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onClick={closeModal}>
           <div className="bg-purple-900 border border-purple-500/30 rounded-xl shadow-2xl overflow-hidden w-full max-w-md" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between px-4 py-3 border-b border-purple-500/20">
               <span className="text-white font-semibold text-sm uppercase tracking-wider">{label}</span>
-              <button type="button" onClick={() => setIsOpen(false)} className="text-white/60 hover:text-white cursor-pointer">
+              <button type="button" onClick={closeModal} className="text-white/60 hover:text-white cursor-pointer">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
+            </div>
+            <div className="px-3 py-2 border-b border-purple-500/20">
+              <input
+                type="text"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Buscar janij..."
+                className="w-full px-3 py-2 rounded-lg bg-purple-800/60 text-white placeholder-purple-300/50 text-sm outline-none border border-purple-500/30 focus:border-amber-500/60"
+              />
             </div>
             <div className="px-3 py-2 flex gap-2 border-b border-purple-500/20">
               <button type="button" onClick={selectAll} className="text-xs text-amber-400 hover:text-amber-300 cursor-pointer font-medium">
