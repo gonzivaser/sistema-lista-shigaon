@@ -69,7 +69,7 @@ export default function MultiSelect({ label, options, selected, onChange, placeh
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Buscar janij..."
-                className="w-full px-3 py-2 rounded-lg bg-purple-800/60 text-white placeholder-purple-300/50 text-sm outline-none border border-purple-500/30 focus:border-amber-500/60"
+                className="w-full px-3 py-2 rounded-lg bg-purple-800/60 text-white placeholder-purple-300/50 text-base outline-none border border-purple-500/30 focus:border-amber-500/60"
               />
             </div>
             <div className="px-3 py-2 flex gap-2 border-b border-purple-500/20">
